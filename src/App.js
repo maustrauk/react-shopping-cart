@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route } from 'react-router-dom';
 import data from './data';
 
@@ -10,9 +10,27 @@ import ShoppingCart from './components/ShoppingCart';
 import ProductContext from './contexts/ProductContext';
 import CartContext from './contexts/CartContext';
 
+const LOCAL_STORAGE = 'shopingCart';
+
+
+const initCart = () => {
+	const storage = JSON.parse(localStorage.getItem(LOCAL_STORAGE));
+	if (storage === null) {
+		return [];
+	} else {
+		return storage;
+	}
+} 
+
 function App() {
+
+
 	const [products] = useState(data);
-	const [cart, setCart] = useState([]);
+	const [cart, setCart] = useState(initCart());
+
+	useEffect(() => {
+		localStorage.setItem(LOCAL_STORAGE, JSON.stringify(cart));
+	},[cart])
 
 	const addItem = item => {
 		// add the given item to the cart
